@@ -7,7 +7,7 @@ import javax.jms.TextMessage;
 import org.apache.activemq.command.ActiveMQTextMessage;
 import org.springframework.jms.listener.SessionAwareMessageListener;
 import org.springframework.stereotype.Service;
- 
+
 @Service
 /**
  * Listener Implement Spring SessionAwareMessageListener Interface
@@ -21,13 +21,13 @@ public class JmsMessageListener implements SessionAwareMessageListener<TextMessa
     System.out.println("Receive: "+message.getText());
      
     // Let's prepare a reply message - a "ACK" String
-    ActiveMQTextMessage textMessage = new ActiveMQTextMessage();
-    textMessage.setText("ACK");
+    //ActiveMQTextMessage textMessage = new ActiveMQTextMessage();
+    //textMessage.setText("ACK");
      
     // Message send back to the replyTo address of the income message.
     // Like replying an email somehow. 
-    MessageProducer producer = session.createProducer(message.getJMSReplyTo());
-    producer.send(textMessage);
+    //MessageProducer producer = session.createProducer(message.getJMSReplyTo());
+    //producer.send(textMessage);
   }
 
 
