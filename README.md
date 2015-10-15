@@ -1,2 +1,2 @@
 # mq-fury
-hammering MQ, testing to the limits and strengthening and hammering back .. loop all again
+Hammering MQ --> testing to the limits --> strengthening and hammering back --> loop all again
