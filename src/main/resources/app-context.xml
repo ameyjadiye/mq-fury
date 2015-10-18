@@ -13,7 +13,6 @@
 
   <context:component-scan base-package="com.codeinventory.mq" />
  
- 
   <!-- =============================================== -->
   <!-- JMS Common, Define JMS connectionFactory       -->
   <!-- =============================================== -->
@@ -27,7 +26,12 @@
   <bean id="connectionFactory"
     class="org.springframework.jms.connection.CachingConnectionFactory">
     <constructor-arg ref="amqConnectionFactory" />
+    <property name="sessionCacheSize" value="100" />
+    <property name="cacheProducers" value="true" />
+    <property name="cacheConsumers" value="true" />
   </bean>
+  
+  <bean id="main" class="com.codeinventory.mq.Main" />
  
   <!-- ======================================================= -->
   <!-- JMS Send, define default destination and JmsTemplate    -->
@@ -37,6 +41,12 @@
     <!-- name of the queue -->
     <constructor-arg index="0" value="amey_test" />
   </bean>
+  
+  
+  <bean id="realDestination" class="org.apache.activemq.command.ActiveMQQueue">
+    <!-- name of the queue -->
+    <constructor-arg index="0" value="real_queue" />
+  </bean>
  
   <!-- JmsTemplate Definition -->
   <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
@@ -44,17 +54,30 @@
     <property name="defaultDestination" ref="defaultDestination" />
   </bean>
   
+  <bean id="jmsMessageListener1" class="com.codeinventory.mq.JmsMessageListener1" />
+  <bean id="jmsMessageListener2" class="com.codeinventory.mq.JmsMessageListener2" />
+  
   <!-- ============================================================= -->
   <!-- JMS Receive，Define MessageListenerContainer                  -->
   <!-- ============================================================= -->
   <bean id = "messageListenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
     <property name="connectionFactory" ref="connectionFactory"/>
     <property name="destinationName" value="amey_test"/>
-    <property name="messageListener" ref="jmsMessageListener"/>
+    <property name="messageListener" ref="jmsMessageListener1"/>
     <property name="cacheLevel" value="1"/>
+    <property name="concurrency" value="5-5" />
     <property name="sessionTransacted" value="true"/>
     <property name="transactionManager" ref="jmsTransactionManager"/>
-    
+  </bean>
+  
+   <bean id = "messageListenerContainer2" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+    <property name="connectionFactory" ref="connectionFactory"/>
+    <property name="destinationName" value="real_queue"/>
+    <property name="messageListener" ref="jmsMessageListener2"/>
+    <property name="cacheLevel" value="1"/>
+    <property name="concurrency" value="5-5" />
+    <property name="sessionTransacted" value="true"/>
+    <property name="transactionManager" ref="jmsTransactionManager"/>
   </bean>
   
   <bean id="jmsTransactionManager" class="org.springframework.jms.connection.JmsTransactionManager">
@@ -68,8 +91,8 @@
  <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306/test" />
+		<property name="url" value="jdbc:mysql://192.168.0.102:3306/test" />
 		<property name="username" value="root" />
-		<property name="password" value="root" />
+		<property name="password" value="9" />
 	</bean>
 </beans>
